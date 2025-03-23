@@ -14,6 +14,7 @@ PORT = 5432
 git clone https://github.com/fa-sharif/planner_backend.git
 cd planner_backend/
 pipenv shell
+pip install -r requirements.txt
 cd planner/
 python manage.py makemigrations
 python manage.py migrate

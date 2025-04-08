@@ -21,5 +21,4 @@ python manage.py migrate
 python manage.py runserver
 
 
-*** Import the Insomnia file (insomnia.har) to call the API in the project. ****
-
+*** Import the Insomnia file (insomnia.har) to call the API in the project. ***

@@ -1,29 +1,21 @@
-from django.shortcuts import render
+from rest_framework import generics, permissions
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from .models import CustomUser
+from .serializers import UserSerializer
 
-# Create your views here.
-# users/views.py
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from .serializers import SignupSerializer, LoginSerializer
-from rest_framework.permissions import AllowAny
+class UserListCreateView(generics.ListCreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    
+    
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [permissions.AllowAny()]  # همه می‌تونن ثبت‌نام کنن
+        return [permissions.IsAdminUser()]  # فقط ادمین‌ها لیست کاربران رو ببینن
+    
+class ProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-class SignupView(APIView):
-    permission_classes = [AllowAny]  # Allow anyone to sign up
-
-    def post(self, request):
-        serializer = SignupSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class LoginView(APIView):
-    permission_classes = [AllowAny]  # Allow anyone to login
-
-    def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        if serializer.is_valid():
-            return Response(serializer.validated_data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_object(self):
+        return self.request.user

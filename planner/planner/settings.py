@@ -29,6 +29,11 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+AUTH_USER_MODEL = 'users.CustomUser'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,10 +54,7 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',  # Enforce authentication
-    ),
+    )
 }
 
 ASGI_APPLICATION = 'planner.asgi.application'

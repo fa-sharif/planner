@@ -1,14 +1,13 @@
-from django.shortcuts import render
+from rest_framework import viewsets, permissions
+from .models import Project
+from .serializers import ProjectSerializer
 
-# Create your views here.
-# projects/views.py
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+class ProjectViewSet(viewsets.ModelViewSet):
+    serializer_class = ProjectSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-class SecureDataView(APIView):
-    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        return Project.objects.filter(owner=self.request.user)
 
-    def get(self, request):
-        data = {"message": "This is a protected resource"}
-        return Response(data)
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

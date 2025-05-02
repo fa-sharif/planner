@@ -1,5 +1,6 @@
 from django.db import models
 from projects.models import Project
+from django.conf import settings
 
 class Task(models.Model):
     STATUS_CHOICES = [
@@ -17,6 +18,7 @@ class Task(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tasks')
+    assignee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="assigned_tasks")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='todo')
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='medium')
     due_date = models.DateTimeField(null=True, blank=True)
